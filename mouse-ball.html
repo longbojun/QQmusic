@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<canvas id="canvas" width='800' height="500">您的浏览器版本过低，请升级浏览器</canvas>
+</body>
+</html>
+<script type="text/javascript">
+var canvas=document.getElementById("canvas");
+ let ctx=canvas.getContext("2d");
+// ctx.beginPath();
+// ctx.arc(200,200,50,0,2*Math.PI);
+// ctx.strokeStyle="red";
+// ctx.lineWidth=20;
+// ctx.stroke();
+// ctx.fillStyle="red";
+// ctx.fill();
+let ary=[];
+let timer=null;
+function Circle(x,y,r){
+	this.x=x;
+	this.y=y;
+	this.r=r;
+	this.dx=Math.random()*10-5;
+	this.dy=Math.random()*10-5;
+	this.color=`rgb(${Math.floor(Math.random()*255)},${Math.floor(Math.random()*255)},${Math.floor(Math.random()*255)})`;
+	ary.push(this);
+}
+Circle.prototype.render=function () {
+	ctx.beginPath();
+	ctx.arc(this.x,this.y,this.r,0,2*Math.PI);
+	ctx.fillStyle=this.color;
+	ctx.fill();
+}
+Circle.prototype.update=function () {
+	this.x += this.dx;
+	this.y += this.dy;
+	this.r--;
+	if(this.r<=0){
+		ary=ary.filter((item)=>{return item.r>0});
+		return false;
+	}
+	return true;
+}
+canvas.onmousemove=function (e) {
+	
+	let cr=new Circle(e.clientX,e.clientY,40);
+}
+canvas.onmouseenter=function () {
+	draw();
+}
+
+canvas.onmouseleave=function () {
+	clearInterval(timer);
+}
+
+
+function draw() {
+	
+	timer=setInterval(()=>{
+		ctx.clearRect(0,0,800,500);
+		ary.forEach((item)=>{
+		item.update() && item.render();
+		});
+	},10);
+	
+}
+
+</script>
